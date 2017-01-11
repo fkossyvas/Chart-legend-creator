@@ -7,5 +7,6 @@ After editing the legend, you can right click on it and save it as an image.
 
 [demo](https://fkossyvas.github.io/Chart-legend-creator/)
 
+
 ![screenshot](https://github.com/fkossyvas/Chart-legend-creator/blob/master/screenshot.png)
 
