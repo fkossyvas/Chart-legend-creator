@@ -18,14 +18,14 @@
 			this.box_line_width=2;
 			this.box_vdistance=this.box_height+this.box_vert_distance+this.box_line_width;
 			this.font_size=9;
-            this.legend0 = "CEO";
-            this.legend1 = "Area";
-            this.legend2 = "Business unit";
-            this.legend3 = "Service";
-            this.legend4 = "Office";
-            this.legend5 = "Unit";
-            this.legend_a1 = "Cosourcing";
-            this.legend_a2 = "Outsourcing";
+            this.legend0 = "Level 0";
+            this.legend1 = "Level 1";
+            this.legend2 = "Level 2";
+            this.legend3 = "Level 3";
+            this.legend4 = "Level 4";
+            this.legend5 = "Level 5";
+            this.legend_a1 = "Extra Type 1";
+            this.legend_a2 = "Extra Type 2";
 			this.color0  = "#C9C9C9";
 			this.color1  = "#0C4693";
 			this.color2  = "#C00000";
@@ -214,7 +214,7 @@
 				if (controls.show_legend_a2==true){context.fillText(controls.legend_a2, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
 			};			
 
-			var presetJson='{"preset":"Small","remembered":{"Small":{"0":{"image_size":200,"legend_width":135,"box_width":18,"box_height":11,"box_topdistance":10,"box_leftdistance":9,"box_vert_distance":2,"box_line_width":2,"font_size":7,"legend_left_start":33,"legend0":"CEO","legend1":"Area","legend2":"Business unit","legend3":"Service","legend4":"Office","legend5":"Unit","legend_a1":"Cosourcing","legend_a2":"Outsourcing","show_legend0":true,"show_legend1":true,"show_legend2":true,"show_legend3":true,"show_legend4":true,"show_legend5":true,"show_legend_a1":true,"show_legend_a2":true,"color0":"#C9C9C9","color1":"#0C4693","color2":"#C00000","color3":"#6EB748","color4":"#CFBD3A","color5":"#00B0F0"}}},"closed":false,"folders":{"Image size":{"preset":"Default","closed":false,"folders":{}},"Boxes":{"preset":"Default","closed":true,"folders":{}},"Legend labels":{"preset":"Default","closed":false,"folders":{}},"Box Colors":{"preset":"Default","closed":true,"folders":{}}}}';
+			var presetJson='{"preset":"Small","remembered":{"Small":{"0":{"image_size":200,"legend_width":135,"box_width":18,"box_height":11,"box_topdistance":10,"box_leftdistance":9,"box_vert_distance":2,"box_line_width":2,"font_size":7,"legend_left_start":33,"legend0":"Level 0","legend1":"Level 1","legend2":"Level 2","legend3":"Level 3","legend4":"Level 4","legend5":"Level 5","legend_a1":"Extra Type 1","legend_a2":"Extra Type 2","show_legend0":true,"show_legend1":true,"show_legend2":true,"show_legend3":true,"show_legend4":true,"show_legend5":true,"show_legend_a1":true,"show_legend_a2":true,"color0":"#C9C9C9","color1":"#0C4693","color2":"#C00000","color3":"#6EB748","color4":"#CFBD3A","color5":"#00B0F0"}}},"closed":false,"folders":{"Image size":{"preset":"Default","closed":false,"folders":{}},"Boxes":{"preset":"Default","closed":true,"folders":{}},"Legend labels":{"preset":"Default","closed":false,"folders":{}},"Box Colors":{"preset":"Default","closed":true,"folders":{}}}}';
 			var gui = new dat.GUI({ load: JSON.parse(presetJson) });
 			gui.remember(controls);
 			
