@@ -9,5 +9,5 @@ After editing the legend, you can right click on it and save it as an image.
 
 Screenshot:
 
-![screenshot](https://github.com/fkossyvas/Chart-legend-creator/blob/master/screenshot.png)
+![](screenshot.png)
 
