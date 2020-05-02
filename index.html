@@ -1,305 +1,394 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <title>Chart legend creator</title>
-	<script type="text/javascript" src="dat.gui.min.js"></script>
+    <script type="text/javascript" src="dat.gui.min.js"></script>
     <script>
+        function myFunction() {
+            var controls = new function() {
+                this.image_size = 200;
+                this.legend_width = 155;
+                this.legend_left_start = 33;
+                this.box_width = 18;
+                this.box_height = 11;
+                this.box_topdistance = 10;
+                this.box_leftdistance = 10;
+                this.box_vert_distance = 5;
+                this.box_line_width = 2;
+                this.box_vdistance = this.box_height + this.box_vert_distance + this.box_line_width;
+                this.font_size = 9;
+                this.legend0 = "Level 0";
+                this.legend1 = "Level 1";
+                this.legend2 = "Level 2";
+                this.legend3 = "Level 3";
+                this.legend4 = "Level 4";
+                this.legend5 = "Level 5";
+                this.legend_a1 = "Extra Type 1";
+                this.legend_a2 = "Extra Type 2";
+                this.color0 = "#C9C9C9";
+                this.color1 = "#0C4693";
+                this.color2 = "#C00000";
+                this.color3 = "#6EB748";
+                this.color4 = "#CFBD3A";
+                this.color5 = "#00B0F0";
+                this.show_legend0 = true;
+                this.show_legend1 = true;
+                this.show_legend2 = true;
+                this.show_legend3 = true;
+                this.show_legend4 = true;
+                this.show_legend5 = true;
+                this.show_legend_a1 = true;
+                this.show_legend_a2 = true;
+            }
 
-		function myFunction() {
-		    var controls = new function() {
-			this.image_size = 200;
-			this.legend_width = 155;
-			this.legend_left_start=33;
-			this.box_width = 18;
-			this.box_height = 11;
-			this.box_topdistance = 10;
-			this.box_leftdistance = 10;
-			this.box_vert_distance = 5;
-			this.box_line_width=2;
-			this.box_vdistance=this.box_height+this.box_vert_distance+this.box_line_width;
-			this.font_size=9;
-            this.legend0 = "Level 0";
-            this.legend1 = "Level 1";
-            this.legend2 = "Level 2";
-            this.legend3 = "Level 3";
-            this.legend4 = "Level 4";
-            this.legend5 = "Level 5";
-            this.legend_a1 = "Extra Type 1";
-            this.legend_a2 = "Extra Type 2";
-			this.color0  = "#C9C9C9";
-			this.color1  = "#0C4693";
-			this.color2  = "#C00000";
-			this.color3  = "#6EB748";
-			this.color4  = "#CFBD3A";
-			this.color5  = "#00B0F0";
-			this.show_legend0=true;
-			this.show_legend1=true;
-			this.show_legend2=true;
-			this.show_legend3=true;
-			this.show_legend4=true;
-			this.show_legend5=true;
-			this.show_legend_a1=true;
-			this.show_legend_a2=true;
-        }
+            CanvasRenderingContext2D.prototype.roundRect =
+                function(x, y, width, height, radius, fill, stroke) {
+                    if (typeof stroke == "undefined") {
+                        stroke = true;
+                    }
+                    if (typeof radius === "undefined") {
+                        radius = 5;
+                    }
+                    this.beginPath();
+                    this.moveTo(x + radius, y);
+                    this.lineTo(x + width - radius, y);
+                    this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                    this.lineTo(x + width, y + height - radius);
+                    this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                    this.lineTo(x + radius, y + height);
+                    this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                    this.lineTo(x, y + radius);
+                    this.quadraticCurveTo(x, y, x + radius, y);
+                    this.closePath();
+                    if (stroke) {
+                        this.stroke();
+                    }
+                    if (fill) {
+                        this.fill();
+                    }
+                }
 
-			CanvasRenderingContext2D.prototype.roundRect = 
-			function(x, y, width, height, radius, fill, stroke) {
-			  if (typeof stroke == "undefined" ) {
-				stroke = true;
-			  }
-			  if (typeof radius === "undefined") {
-				radius = 5;
-			  }
-			  this.beginPath(); 
-			  this.moveTo(x + radius, y);
-			  this.lineTo(x + width - radius, y);
-			  this.quadraticCurveTo(x + width, y, x + width, y + radius);
-			  this.lineTo(x + width, y + height - radius);
-			  this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-			  this.lineTo(x + radius, y + height);
-			  this.quadraticCurveTo(x, y + height, x, y + height - radius);
-			  this.lineTo(x, y + radius);
-			  this.quadraticCurveTo(x, y, x + radius, y);
-			  this.closePath();
-			  if (stroke) {
-				this.stroke();
-			  }
-			  if (fill) {
-				this.fill();
-			  }        
-			}
+            drawLegend = function() {
+                var canvas = document.getElementById("myCanvas");
 
-			drawLegend = function() {
-				var canvas=document.getElementById("myCanvas");
-
-				canvas.width = controls.image_size;
-				canvas.height = controls.image_size;
-				var internal_canvas_height;
-				var tmp=-1;
-				if (controls.show_legend0==true) {tmp+=1;}
-				if (controls.show_legend1==true) {tmp+=1;}
-				if (controls.show_legend2==true) {tmp+=1;}
-				if (controls.show_legend3==true) {tmp+=1;}
-				if (controls.show_legend4==true) {tmp+=1;}
-				if (controls.show_legend5==true) {tmp+=1;}
-				if (controls.show_legend_a1==true) {tmp+=1;}
-				if (controls.show_legend_a2==true) {tmp+=1;}
-				controls.box_vdistance=controls.box_height+controls.box_vert_distance+controls.box_line_width;
-				internal_canvas_height = controls.box_topdistance+(controls.box_vdistance*tmp)+controls.box_vdistance+8;
-				if ((controls.show_legend_a1==true) || (controls.show_legend_a2==true)) {internal_canvas_height+=controls.box_topdistance;} else {internal_canvas_height+=controls.box_topdistance-6;}
-				canvas.style.width = controls.canvas_width+"px";
-				canvas.style.height = canvas.height+"px";
-				
-				var context = canvas.getContext("2d");
-
-				context.setLineDash([]);
-				context.fillStyle = "white";
-				context.shadowColor = "rgba( 0, 0, 0, 0.5 )";
-				context.shadowBlur = 8;
-				context.shadowOffsetX = 5;
-				context.shadowOffsetY = 5;
-				context.roundRect(3, 3, controls.legend_width-12, internal_canvas_height-12,8,true);
-				context.shadowColor = "rgba( 0, 0, 0, 0 )";
-				context.shadowBlur = 0;
-				context.shadowOffsetX = 0;
-				context.shadowOffsetY = 0;
-
-				var vdis=controls.box_topdistance;
-				var ldis=controls.box_leftdistance;
-				
-                if (controls.show_legend0==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color0; 
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-				
-                if (controls.show_legend1==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color1;
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-				
-                if (controls.show_legend2==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color2;
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-				
-                if (controls.show_legend3==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color3; 
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-				
-				if (controls.show_legend4==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color4; 
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-
-				
-				if (controls.show_legend5==true){
-				context.beginPath();
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = controls.color5; 
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-
-				vdis+=6;
-				if (controls.show_legend_a1==true){
-				context.beginPath();
-				context.setLineDash([6]); //Dots
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = 'black'; 
-				context.stroke();
-				vdis+=controls.box_vdistance;
-				}
-
-				if (controls.show_legend_a2==true){
-				context.beginPath();
-				context.setLineDash([2]);   //Dashes
-				context.rect(ldis, vdis, controls.box_width, controls.box_height);
-				context.fillStyle = 'white';
-				context.fill();
-				context.lineWidth = controls.box_line_width;
-				context.strokeStyle = 'black'; 
-				context.stroke();
-				context.setLineDash([]);
-				}
-
-				context.fillStyle = "black";
-				context.font = controls.font_size+"pt Arial";
-				var text_start=Math.floor((controls.box_height-controls.font_size)/2);
-				vdis=controls.box_topdistance+controls.font_size+text_start;
-				if (controls.show_legend0==true){context.fillText(controls.legend0, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend1==true){context.fillText(controls.legend1, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend2==true){context.fillText(controls.legend2, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend3==true){context.fillText(controls.legend3, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend4==true){context.fillText(controls.legend4, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend5==true){context.fillText(controls.legend5, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				vdis+=6;
-				if (controls.show_legend_a1==true){context.fillText(controls.legend_a1, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-				if (controls.show_legend_a2==true){context.fillText(controls.legend_a2, controls.legend_left_start, vdis);vdis+=controls.box_vdistance;}
-			};			
-
-			var presetJson='{"preset":"Small","remembered":{"Small":{"0":{"image_size":200,"legend_width":135,"box_width":18,"box_height":11,"box_topdistance":10,"box_leftdistance":9,"box_vert_distance":2,"box_line_width":2,"font_size":7,"legend_left_start":33,"legend0":"Level 0","legend1":"Level 1","legend2":"Level 2","legend3":"Level 3","legend4":"Level 4","legend5":"Level 5","legend_a1":"Extra Type 1","legend_a2":"Extra Type 2","show_legend0":true,"show_legend1":true,"show_legend2":true,"show_legend3":true,"show_legend4":true,"show_legend5":true,"show_legend_a1":true,"show_legend_a2":true,"color0":"#C9C9C9","color1":"#0C4693","color2":"#C00000","color3":"#6EB748","color4":"#CFBD3A","color5":"#00B0F0"}}},"closed":false,"folders":{"Image size":{"preset":"Default","closed":false,"folders":{}},"Boxes":{"preset":"Default","closed":true,"folders":{}},"Legend labels":{"preset":"Default","closed":false,"folders":{}},"Box Colors":{"preset":"Default","closed":true,"folders":{}}}}';
-			var gui = new dat.GUI({ load: JSON.parse(presetJson) });
-			gui.remember(controls);
-			
-			var canv = gui.addFolder('Image size');
-			control_i_01=canv.add(controls, 'image_size',0,500).name('Size');
-			control_i_02=canv.add(controls, 'legend_width',0,500).name('Legend width');
-			canv.open();
-			
-			var boxes = gui.addFolder('Boxes');
-			control_b_01=boxes.add(controls, 'box_width',0,500).name('Width');
-			control_b_02=boxes.add(controls, 'box_height',0,500).name('Height');
-			control_b_03=boxes.add(controls, 'box_topdistance',0,50).name('Distance from top');
-			control_b_04=boxes.add(controls, 'box_leftdistance',0,50).name('Distance from left');
-			control_b_05=boxes.add(controls, 'box_vert_distance',0,50).name('Vertical distance');
-			control_b_06=boxes.add(controls, 'box_line_width',0,50).name('Box thickness');
-			boxes.close();
-			
-			var legends = gui.addFolder('Legend labels');
-			control_l_01=legends.add(controls, 'font_size').name('Font size');
-			control_l_02=legends.add(controls, 'legend_left_start',0,500).name('legend left start');			
-			control_l_03=legends.add(controls, 'legend0').name('Legend 0');
-			control_l_04=legends.add(controls, 'legend1').name('Legend 1');			
-			control_l_05=legends.add(controls, 'legend2').name('Legend 2');
-			control_l_06=legends.add(controls, 'legend3').name('Legend 3');
-			control_l_07=legends.add(controls, 'legend4').name('Legend 4');
-			control_l_08=legends.add(controls, 'legend5').name('Legend 5');
-			control_l_09=legends.add(controls, 'legend_a1').name('Legend a1');
-			control_l_10=legends.add(controls, 'legend_a2').name('Legend a2');
-			control_l_11=legends.add(controls, 'show_legend0').name('Show Legend 0');
-			control_l_12=legends.add(controls, 'show_legend1').name('Show Legend 1');
-			control_l_13=legends.add(controls, 'show_legend2').name('Show Legend 2');
-			control_l_14=legends.add(controls, 'show_legend3').name('Show Legend 3');
-			control_l_15=legends.add(controls, 'show_legend4').name('Show Legend 4');
-			control_l_16=legends.add(controls, 'show_legend5').name('Show Legend 5');
-			control_l_17=legends.add(controls, 'show_legend_a1').name('Show Legend a1');
-			control_l_18=legends.add(controls, 'show_legend_a2').name('Show Legend a2');
-			legends.open();
-			
-			var colors = gui.addFolder('Box Colors');		
-			control_c_01=colors.addColor(controls, 'color0').name('Color 0');
-			control_c_02=colors.addColor(controls, 'color1').name('Color 1');
-			control_c_03=colors.addColor(controls, 'color2').name('Color 2');
-			control_c_04=colors.addColor(controls, 'color3').name('Color 3');
-			control_c_05=colors.addColor(controls, 'color4').name('Color 4');		
-			control_c_06=colors.addColor(controls, 'color5').name('Color 5');		
-			colors.close();		
-
-			control_i_01.onChange(function(value) {drawLegend();});
-			control_i_02.onChange(function(value) {drawLegend();});
-			control_b_01.onChange(function(value) {drawLegend();});
-			control_b_02.onChange(function(value) {drawLegend();});
-			control_b_03.onChange(function(value) {drawLegend();});
-			control_b_04.onChange(function(value) {drawLegend();});
-			control_b_05.onChange(function(value) {drawLegend();});
-			control_b_06.onChange(function(value) {drawLegend();});
-			control_l_01.onChange(function(value) {drawLegend();});
-			control_l_02.onChange(function(value) {drawLegend();});
-			control_l_03.onChange(function(value) {drawLegend();});
-			control_l_04.onChange(function(value) {drawLegend();});
-			control_l_05.onChange(function(value) {drawLegend();});
-			control_l_06.onChange(function(value) {drawLegend();});
-			control_l_07.onChange(function(value) {drawLegend();});
-			control_l_08.onChange(function(value) {drawLegend();});
-			control_l_09.onChange(function(value) {drawLegend();});
-			control_l_10.onChange(function(value) {drawLegend();});
-			control_l_11.onChange(function(value) {drawLegend();});
-			control_l_12.onChange(function(value) {drawLegend();});
-			control_l_13.onChange(function(value) {drawLegend();});
-			control_l_14.onChange(function(value) {drawLegend();});
-			control_l_15.onChange(function(value) {drawLegend();});
-			control_l_16.onChange(function(value) {drawLegend();});
-			control_l_17.onChange(function(value) {drawLegend();});
-			control_l_18.onChange(function(value) {drawLegend();});
-			control_c_01.onChange(function(value) {drawLegend();});
-			control_c_02.onChange(function(value) {drawLegend();});
-			control_c_03.onChange(function(value) {drawLegend();});
-			control_c_04.onChange(function(value) {drawLegend();});
-			control_c_05.onChange(function(value) {drawLegend();});
-			control_c_06.onChange(function(value) {drawLegend();});
-
-			drawLegend();		
-		};    
-	</script>
-  </head>
-  <body onload="myFunction()">
-	<canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
-  </body>
+                canvas.width = controls.image_size;
+                canvas.height = controls.image_size;
+                var internal_canvas_height;
+                var tmp = -1;
+                if (controls.show_legend0 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend1 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend2 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend3 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend4 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend5 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend_a1 == true) {
+                    tmp += 1;
+                }
+                if (controls.show_legend_a2 == true) {
+                    tmp += 1;
+                }
+                controls.box_vdistance = controls.box_height + controls.box_vert_distance + controls.box_line_width;
+                internal_canvas_height = controls.box_topdistance + (controls.box_vdistance * tmp) + controls.box_vdistance + 8;
+                if ((controls.show_legend_a1 == true) || (controls.show_legend_a2 == true)) {
+                    internal_canvas_height += controls.box_topdistance;
+                } else {
+                    internal_canvas_height += controls.box_topdistance - 6;
+                }
+                canvas.style.width = controls.canvas_width + "px";
+                canvas.style.height = canvas.height + "px";
+                var context = canvas.getContext("2d");
+                context.setLineDash([]);
+                context.fillStyle = "white";
+                context.shadowColor = "rgba( 0, 0, 0, 0.5 )";
+                context.shadowBlur = 8;
+                context.shadowOffsetX = 5;
+                context.shadowOffsetY = 5;
+                context.roundRect(3, 3, controls.legend_width - 12, internal_canvas_height - 12, 8, true);
+                context.shadowColor = "rgba( 0, 0, 0, 0 )";
+                context.shadowBlur = 0;
+                context.shadowOffsetX = 0;
+                context.shadowOffsetY = 0;
+                var vdis = controls.box_topdistance;
+                var ldis = controls.box_leftdistance;
+                if (controls.show_legend0 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color0;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend1 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color1;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend2 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color2;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend3 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color3;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend4 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color4;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend5 == true) {
+                    context.beginPath();
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = controls.color5;
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                vdis += 6;
+                if (controls.show_legend_a1 == true) {
+                    context.beginPath();
+                    context.setLineDash([6]); //Dots
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = 'black';
+                    context.stroke();
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend_a2 == true) {
+                    context.beginPath();
+                    context.setLineDash([2]); //Dashes
+                    context.rect(ldis, vdis, controls.box_width, controls.box_height);
+                    context.fillStyle = 'white';
+                    context.fill();
+                    context.lineWidth = controls.box_line_width;
+                    context.strokeStyle = 'black';
+                    context.stroke();
+                    context.setLineDash([]);
+                }
+                context.fillStyle = "black";
+                context.font = controls.font_size + "pt Arial";
+                var text_start = Math.floor((controls.box_height - controls.font_size) / 2);
+                vdis = controls.box_topdistance + controls.font_size + text_start;
+                if (controls.show_legend0 == true) {
+                    context.fillText(controls.legend0, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend1 == true) {
+                    context.fillText(controls.legend1, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend2 == true) {
+                    context.fillText(controls.legend2, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend3 == true) {
+                    context.fillText(controls.legend3, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend4 == true) {
+                    context.fillText(controls.legend4, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend5 == true) {
+                    context.fillText(controls.legend5, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                vdis += 6;
+                if (controls.show_legend_a1 == true) {
+                    context.fillText(controls.legend_a1, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+                if (controls.show_legend_a2 == true) {
+                    context.fillText(controls.legend_a2, controls.legend_left_start, vdis);
+                    vdis += controls.box_vdistance;
+                }
+            };
+            var presetJson = '{"preset":"Small","remembered":{"Small":{"0":{"image_size":200,"legend_width":135,"box_width":18,"box_height":11,"box_topdistance":10,"box_leftdistance":9,"box_vert_distance":2,"box_line_width":2,"font_size":7,"legend_left_start":33,"legend0":"Level 0","legend1":"Level 1","legend2":"Level 2","legend3":"Level 3","legend4":"Level 4","legend5":"Level 5","legend_a1":"Extra Type 1","legend_a2":"Extra Type 2","show_legend0":true,"show_legend1":true,"show_legend2":true,"show_legend3":true,"show_legend4":true,"show_legend5":true,"show_legend_a1":true,"show_legend_a2":true,"color0":"#C9C9C9","color1":"#0C4693","color2":"#C00000","color3":"#6EB748","color4":"#CFBD3A","color5":"#00B0F0"}}},"closed":false,"folders":{"Image size":{"preset":"Default","closed":false,"folders":{}},"Boxes":{"preset":"Default","closed":true,"folders":{}},"Legend labels":{"preset":"Default","closed":false,"folders":{}},"Box Colors":{"preset":"Default","closed":true,"folders":{}}}}';
+            var gui = new dat.GUI({
+                load: JSON.parse(presetJson)
+            });
+            gui.remember(controls);
+            var canv = gui.addFolder('Image size');
+            control_i_01 = canv.add(controls, 'image_size', 0, 500).name('Size');
+            control_i_02 = canv.add(controls, 'legend_width', 0, 500).name('Legend width');
+            canv.open();
+            var boxes = gui.addFolder('Boxes');
+            control_b_01 = boxes.add(controls, 'box_width', 0, 500).name('Width');
+            control_b_02 = boxes.add(controls, 'box_height', 0, 500).name('Height');
+            control_b_03 = boxes.add(controls, 'box_topdistance', 0, 50).name('Distance from top');
+            control_b_04 = boxes.add(controls, 'box_leftdistance', 0, 50).name('Distance from left');
+            control_b_05 = boxes.add(controls, 'box_vert_distance', 0, 50).name('Vertical distance');
+            control_b_06 = boxes.add(controls, 'box_line_width', 0, 50).name('Box thickness');
+            boxes.close();
+            var legends = gui.addFolder('Legend labels');
+            control_l_01 = legends.add(controls, 'font_size').name('Font size');
+            control_l_02 = legends.add(controls, 'legend_left_start', 0, 500).name('legend left start');
+            control_l_03 = legends.add(controls, 'legend0').name('Legend 0');
+            control_l_04 = legends.add(controls, 'legend1').name('Legend 1');
+            control_l_05 = legends.add(controls, 'legend2').name('Legend 2');
+            control_l_06 = legends.add(controls, 'legend3').name('Legend 3');
+            control_l_07 = legends.add(controls, 'legend4').name('Legend 4');
+            control_l_08 = legends.add(controls, 'legend5').name('Legend 5');
+            control_l_09 = legends.add(controls, 'legend_a1').name('Legend a1');
+            control_l_10 = legends.add(controls, 'legend_a2').name('Legend a2');
+            control_l_11 = legends.add(controls, 'show_legend0').name('Show Legend 0');
+            control_l_12 = legends.add(controls, 'show_legend1').name('Show Legend 1');
+            control_l_13 = legends.add(controls, 'show_legend2').name('Show Legend 2');
+            control_l_14 = legends.add(controls, 'show_legend3').name('Show Legend 3');
+            control_l_15 = legends.add(controls, 'show_legend4').name('Show Legend 4');
+            control_l_16 = legends.add(controls, 'show_legend5').name('Show Legend 5');
+            control_l_17 = legends.add(controls, 'show_legend_a1').name('Show Legend a1');
+            control_l_18 = legends.add(controls, 'show_legend_a2').name('Show Legend a2');
+            legends.open();
+            var colors = gui.addFolder('Box Colors');
+            control_c_01 = colors.addColor(controls, 'color0').name('Color 0');
+            control_c_02 = colors.addColor(controls, 'color1').name('Color 1');
+            control_c_03 = colors.addColor(controls, 'color2').name('Color 2');
+            control_c_04 = colors.addColor(controls, 'color3').name('Color 3');
+            control_c_05 = colors.addColor(controls, 'color4').name('Color 4');
+            control_c_06 = colors.addColor(controls, 'color5').name('Color 5');
+            colors.close();
+            control_i_01.onChange(function(value) {
+                drawLegend();
+            });
+            control_i_02.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_01.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_02.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_03.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_04.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_05.onChange(function(value) {
+                drawLegend();
+            });
+            control_b_06.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_01.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_02.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_03.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_04.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_05.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_06.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_07.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_08.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_09.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_10.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_11.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_12.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_13.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_14.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_15.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_16.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_17.onChange(function(value) {
+                drawLegend();
+            });
+            control_l_18.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_01.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_02.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_03.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_04.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_05.onChange(function(value) {
+                drawLegend();
+            });
+            control_c_06.onChange(function(value) {
+                drawLegend();
+            });
+            drawLegend();
+        };
+    </script>
+</head>
+<body onload="myFunction()">
+    <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
+</body>
 </html>
